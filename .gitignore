@@ -39,3 +39,5 @@ sysinfo.txt
 ehthumbs.db
 Thumbs.db
 *.blend1
+*.VC.db
+*.VC.opendb

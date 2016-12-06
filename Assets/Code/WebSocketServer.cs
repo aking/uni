@@ -16,11 +16,34 @@ public class NubMsg {
 }
 
 [System.Serializable]
+public class Hex {
+    public int[] pos;
+    public string style;
+}
+
+[System.Serializable]
+public class Cell {
+    public string id;
+    public int[] pos;
+    public Hex[] hexes;
+
+    public override string ToString() {
+        string hexStr = "";
+        for(int i=0; i<hexes.Length; ++i) {
+            hexStr += "\n     " + i + ": ( " + hexes[i].pos[0] + ", " + hexes[i].pos[1] + ", " + hexes[i].pos[2] + ") " +
+                " style: " + hexes[i].style;
+        }
+        return "Cell <" + hexes.Length + "> : [" + id + "]\n" +
+            "    pos: [" + pos[0] + ", " + pos[1] + ", " + pos[2] + "]\n" +
+            "    hexes: " + hexStr;
+    }
+}
+
+[System.Serializable]
 public class CellMsg {
     public string tag;
     public string cmd;
-    public string style;
-    public int[] pos;
+    public Cell cell;
 }
 
 public class WebSocketServer : MonoBehaviour {
@@ -108,14 +131,15 @@ public class WebSocketServer : MonoBehaviour {
 
     //------------------------------------------------------------------------
     void handleCell(string _msg) {
-        CellMsg cell = JsonUtility.FromJson<CellMsg>(_msg);
-        switch (cell.cmd)
+        CellMsg cellMsg = JsonUtility.FromJson<CellMsg>(_msg);
+        switch (cellMsg.cmd)
         {
             case "new-cell":
+                Debug.Log("[WSS:handleCell] NEW CELL:" + cellMsg.cell);
                 break;
 
             default:
-                Debug.LogError("[WSS:handleCell] UNKNOWN cmd:" + cell.cmd);
+                Debug.LogError("[WSS:handleCell] UNKNOWN cmd:" + cellMsg.cmd);
                 break;
         }
     }
