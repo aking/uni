@@ -19,24 +19,7 @@ public class NubMsg {
 public class Hex {
     public int[] pos;
     public string style;
-}
-
-[System.Serializable]
-public class Cell {
-    public string id;
-    public int[] pos;
-    public Hex[] hexes;
-
-    public override string ToString() {
-        string hexStr = "";
-        for(int i=0; i<hexes.Length; ++i) {
-            hexStr += "\n     " + i + ": ( " + hexes[i].pos[0] + ", " + hexes[i].pos[1] + ", " + hexes[i].pos[2] + ") " +
-                " style: " + hexes[i].style;
-        }
-        return "Cell <" + hexes.Length + "> : [" + id + "]\n" +
-            "    pos: [" + pos[0] + ", " + pos[1] + ", " + pos[2] + "]\n" +
-            "    hexes: " + hexStr;
-    }
+    public GameObject obj;
 }
 
 [System.Serializable]
@@ -51,6 +34,7 @@ public class WebSocketServer : MonoBehaviour {
     int m_hostId;
     int m_chanId;
 
+    public CellManager _cellManager;
     public GameObject _envRoot;
     public GameObject _stdHex;
     public GameObject m_testHex;
@@ -132,16 +116,25 @@ public class WebSocketServer : MonoBehaviour {
     //------------------------------------------------------------------------
     void handleCell(string _msg) {
         CellMsg cellMsg = JsonUtility.FromJson<CellMsg>(_msg);
+        _cellManager.handleCellMsg(cellMsg);
+        /*
         switch (cellMsg.cmd)
         {
             case "new-cell":
                 Debug.Log("[WSS:handleCell] NEW CELL:" + cellMsg.cell);
+                _cellManager.addCell(cellMsg.cell);
+                break;
+
+            case "delete-all":
+                Debug.Log("[WSS:handleCell] DELETE ALL CELLs");
+                _cellManager.deleteAll();
                 break;
 
             default:
                 Debug.LogError("[WSS:handleCell] UNKNOWN cmd:" + cellMsg.cmd);
                 break;
         }
+        */
     }
 
     //------------------------------------------------------------------------

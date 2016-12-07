@@ -4,6 +4,8 @@
 /[Bb]uild/
 /[Bb]uilds/
 /Assets/AssetStoreTools*
+sysinfo.txt
+*.pidb.meta
 
 v01d
 
@@ -29,6 +31,8 @@ sysinfo.txt
 # Builds
 *.apk
 *.unitypackage
+*.app
+*.exe
 
 # OS Generated
 .DS_Store

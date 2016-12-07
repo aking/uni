@@ -202,6 +202,7 @@ GameObject:
   m_Component:
   - component: {fileID: 730222531}
   - component: {fileID: 730222530}
+  - component: {fileID: 730222532}
   m_Layer: 0
   m_Name: MCP
   m_TagString: Untagged
@@ -220,6 +221,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a445b2b32be3140b5b1e54ac7212dff8, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _cellManager: {fileID: 730222532}
   _envRoot: {fileID: 857796002}
   _stdHex: {fileID: 1244899668184710, guid: aa3d5b75b64a64ee1b35264d9728fbad, type: 2}
   m_testHex: {fileID: 0}
@@ -236,6 +238,17 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &730222532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 730222529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 43cc8cedb0ef1af4f904015a99cb6d9c, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &780837905
 Prefab:
   m_ObjectHideFlags: 0
