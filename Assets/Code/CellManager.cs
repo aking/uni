@@ -3,8 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class Cell
-{
+public class Cell {
   public string id;
   public int[] pos;
   public GameObject rootObj;
@@ -13,20 +12,27 @@ public class Cell
   public override string ToString() {
     string hexStr = "";
     for(int i = 0; i < hexes.Length; ++i) {
-      hexStr += "\n     " + i + ": ( " + hexes[i].pos[0] + ", " + hexes[i].pos[1] + ", " + hexes[i].pos[2] + ") " +
-      " style: " + hexes[i].style;
+      hexStr += "\n     "+i+": ( "+hexes[i].pos[0]+", "+hexes[i].pos[1]+", "+hexes[i].pos[2]+") "+
+      " style: "+hexes[i].style;
     }
-    return "Cell <" + hexes.Length + "> : [" + id + "]\n" +
-    "    pos: [" + pos[0] + ", " + pos[1] + ", " + pos[2] + "]\n" +
-    "    hexes: " + hexStr;
+    return "Cell <"+hexes.Length+"> : ["+id+"]\n"+
+    "    pos: ["+pos[0]+", "+pos[1]+", "+pos[2]+"]\n"+
+    "    hexes: "+hexStr;
   }
 }
 
+public delegate void dispatchDelegate(string _msg);
+
 [System.Serializable]
-public class CellManager : ScriptableObject
-{
+public class CellManager : ScriptableObject {
   private GameObject m_stdHex;
   private List<Cell> m_cells = new List<Cell>();
+  [SerializeField]
+  private dispatchDelegate m_dispatchFn;
+
+  public void setDispatchFn(dispatchDelegate _fn) {
+    m_dispatchFn = _fn;
+  }
 
   void Awake() {
     Debug.Log("[CM:Awake] Call...");
@@ -46,7 +52,7 @@ public class CellManager : ScriptableObject
   }
 
   public void addCell(Cell _cell) {
-    Debug.Log("[CM:addCell] Adding new cell:" + m_cells.Count);
+    Debug.Log("[CM:addCell] Adding new cell:"+m_cells.Count);
     // Set the Cell's root obj
     int[] p = _cell.pos;
     _cell.rootObj = new GameObject("CellRoot");
@@ -65,7 +71,7 @@ public class CellManager : ScriptableObject
 
   public void deleteAll() {
     foreach(Cell c in m_cells) {
-      Debug.Log("[CM:deleteAll] Need to delete cell:" + c.id);
+      Debug.Log("[CM:deleteAll] Need to delete cell:"+c.id);
       foreach(Hex h in c.hexes) {
         Destroy(h.obj);
         h.obj = null;
@@ -78,10 +84,25 @@ public class CellManager : ScriptableObject
     m_cells.Clear();
   }
 
+  public void dumpInfo() {
+    string cellInfo = "";
+    foreach(Cell c in m_cells) {
+      cellInfo += "\t ID:" + c.id + " #ofHex:" + c.hexes.Length + "\n";
+    }
+
+    Debug.Log("[CM:dumpInfo]  # cells:" + m_cells.Count + "\n" + cellInfo);
+
+    m_dispatchFn("TEST CALLBACK");
+  }
+
+  private void sendPong() {
+  
+  }
+
   public void handleCellMsg(CellMsg _msg) {
     switch(_msg.cmd) {
       case "new-cell":
-        Debug.Log("[CM:handleCell] NEW CELL:" + _msg.cell);
+        Debug.Log("[CM:handleCell] NEW CELL:"+_msg.cell);
         addCell(_msg.cell);
         break;
 
@@ -90,8 +111,16 @@ public class CellManager : ScriptableObject
         deleteAll();
         break;
 
+      case "info":
+        dumpInfo();
+        break;
+
+      case "ping":
+        sendPong();
+        break;
+
       default:
-        Debug.LogError("[CM:handleCell] UNKNOWN cmd:" + _msg.cmd);
+        Debug.LogError("[CM:handleCell] UNKNOWN cmd:"+_msg.cmd);
         break;
     }
   }

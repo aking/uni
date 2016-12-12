@@ -37,16 +37,26 @@ public class WebSocketServer : MonoBehaviour
 {
   int m_hostId;
   int m_chanId;
+  int m_connId;
+  private CellManager m_cellManager;
 
-  public CellManager _cellManager;
-  public GameObject _envRoot;
-  public GameObject _stdHex;
-  public GameObject m_testHex;
+  public GameObject m_envRoot;
+  public GameObject m_stdHex;
 
   //------------------------------------------------------------------------
   void Start() {
     SetupServer();
-    _cellManager = ScriptableObject.CreateInstance<CellManager>();
+    m_cellManager = ScriptableObject.CreateInstance<CellManager>();
+    m_cellManager.setDispatchFn(dispatch);
+  }
+
+  private void OnEnable() {
+    Debug.Log("[WSS:OnEnable] BEING ENABLED\n");
+    if(m_cellManager) {
+      m_cellManager.setDispatchFn(dispatch);
+    } else {
+      Debug.Log("[WSS:OnEnable] CAN'T SET");
+    }
   }
 
   //------------------------------------------------------------------------
@@ -66,6 +76,7 @@ public class WebSocketServer : MonoBehaviour
         break;
       case NetworkEventType.ConnectEvent:
         Debug.Log("[WSS:Update] CONNECTION");
+        m_connId = connId;
         break;
       case NetworkEventType.DisconnectEvent:
         Debug.Log("[WSS:Update] DIS CONNECITON!");
@@ -101,22 +112,33 @@ public class WebSocketServer : MonoBehaviour
   }
 
   //------------------------------------------------------------------------
+  public void dispatch(string _str) {
+    Debug.Log("[WSS:dispatch] Need to dispatch:" + _str);
+
+    byte errorCode;
+    byte[] buf = System.Text.Encoding.UTF8.GetBytes("{\"HI\": 23}");
+    //int bufCount = System.Text.Encoding.UTF8.GetByteCount("{HI}");
+    bool result = NetworkTransport.Send(m_hostId, m_connId, m_chanId, buf, buf.Length, out errorCode);
+    Debug.Log("[WSS:dispatch] result=" + result + " ERROR:" + errorCode);
+  }
+
+  //------------------------------------------------------------------------
   void handleHex(string _msg) {
     NubMsg nub = JsonUtility.FromJson<NubMsg>(_msg);
     switch(nub.cmd) {
       case "add":
         Debug.Log("[WSS:handleHex] add cmd");
         Vector3 pos = new Vector3(nub.pos[0], nub.pos[1], nub.pos[2]);
-        GameObject hex = Instantiate(_stdHex, pos, Quaternion.identity);
+        GameObject hex = Instantiate(m_stdHex, pos, Quaternion.identity);
         hex.name = "hex";
-        hex.transform.parent = _envRoot.transform;
+        hex.transform.parent = m_envRoot.transform;
         break;
 
       case "delete-all":
         Debug.Log("[WSS:handleHex] delete-all cmd");
-        int numChild = _envRoot.transform.childCount;
+        int numChild = m_envRoot.transform.childCount;
         for(int i = numChild; i > 0; i--) {
-          Destroy(_envRoot.transform.GetChild(i - 1).gameObject);
+          Destroy(m_envRoot.transform.GetChild(i - 1).gameObject);
         }
         break;
 
@@ -129,7 +151,7 @@ public class WebSocketServer : MonoBehaviour
   //------------------------------------------------------------------------
   void handleCell(string _msg) {
     CellMsg cellMsg = JsonUtility.FromJson<CellMsg>(_msg);
-    _cellManager.handleCellMsg(cellMsg);
+    m_cellManager.handleCellMsg(cellMsg);
   }
 
   //------------------------------------------------------------------------
