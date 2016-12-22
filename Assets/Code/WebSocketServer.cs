@@ -48,6 +48,10 @@ public class WebSocketServer : MonoBehaviour
     SetupServer();
     m_cellManager = ScriptableObject.CreateInstance<CellManager>();
     m_cellManager.setDispatchFn(dispatch);
+
+    int val = WebBrowserWrapper.openBrowser();
+    Debug.Log("[WSS:Start] val = " + val);
+
   }
 
   private void OnEnable() {
@@ -57,6 +61,11 @@ public class WebSocketServer : MonoBehaviour
     } else {
       Debug.Log("[WSS:OnEnable] CAN'T SET");
     }
+  }
+
+  private void OnDisable() {
+    Debug.Log("[WSS:OnDisable] BEING DISABLED\n");
+    WebBrowserWrapper.closeBrowser();
   }
 
   //------------------------------------------------------------------------
@@ -164,9 +173,11 @@ public class WebSocketServer : MonoBehaviour
     m_hostId = NetworkTransport.AddWebsocketHost(topology, 9001, null);
     Debug.Log("[WSS:SetupServer] WebSocket HostID:" + m_hostId + "  ChanID:" + m_chanId);
   }
-
+    
+#if UNITY_EDITOR
   [UnityEditor.Callbacks.DidReloadScripts]
   private static void OnScriptsReloaded() {
     Debug.Log("[WSS] RELOADED -------------");
   }
+#endif
 }

@@ -202,6 +202,8 @@ GameObject:
   m_Component:
   - component: {fileID: 730222531}
   - component: {fileID: 730222530}
+  - component: {fileID: 730222532}
+  - component: {fileID: 730222533}
   m_Layer: 0
   m_Name: MCP
   m_TagString: Untagged
@@ -235,6 +237,29 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &730222532
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 730222529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 546d22fba42cc40f9bbb2e4cd1bcb4fc, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_firstIndexPath: 
+--- !u!114 &730222533
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_PrefabParentObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 730222529}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 51896bfc4a6bc42058cf8c8a166e5ee7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1001 &780837905
 Prefab:
   m_ObjectHideFlags: 0
