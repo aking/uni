@@ -49,9 +49,11 @@ public class WebSocketServer : MonoBehaviour
     m_cellManager = ScriptableObject.CreateInstance<CellManager>();
     m_cellManager.setDispatchFn(dispatch);
 
+    // don't open if in editor
+#if !UNITY_EDITOR
     int val = WebBrowserWrapper.openBrowser();
     Debug.Log("[WSS:Start] val = " + val);
-
+#endif
   }
 
   private void OnEnable() {
@@ -65,7 +67,9 @@ public class WebSocketServer : MonoBehaviour
 
   private void OnDisable() {
     Debug.Log("[WSS:OnDisable] BEING DISABLED\n");
+#if !UNITY_EDITOR
     WebBrowserWrapper.closeBrowser();
+#endif
   }
 
   //------------------------------------------------------------------------
