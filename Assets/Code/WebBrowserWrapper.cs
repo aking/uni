@@ -11,14 +11,14 @@ public class WebBrowserWrapper {
   private const string dllName = "Ava";
 #endif
 
+#if UNITY_STANDALONE_WIN
+  public static int openBrowser() {return 0;}
+  public static void closeBrowser() {}
+#else
   [DllImport(dllName)]
   public static extern int openBrowser();
 
   [DllImport(dllName)]
   public static extern void closeBrowser();
-
-/*
-  public static int openBrowser() {return 0;}
-  public static void closeBrowser() {}
-*/
+#endif
 }
