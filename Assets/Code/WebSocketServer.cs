@@ -11,7 +11,7 @@ public class TagObj
 [System.Serializable]
 public class NubMsg
 {
-  public int[] pos;
+  public float[] pos;
   public string style;
   public string tag;
   public string cmd;
@@ -20,7 +20,7 @@ public class NubMsg
 [System.Serializable]
 public class Hex
 {
-  public int[] pos;
+  public float[] pos;
   public string style;
   public GameObject obj;
 }
