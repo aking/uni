@@ -74,6 +74,13 @@ public class WebSocketServer : MonoBehaviour
 
   //------------------------------------------------------------------------
   void Update() {
+    int packetsPerTick = 20;
+    while(--packetsPerTick > 0 && tickReceivedPackets())
+      ;
+  }
+
+  bool tickReceivedPackets()
+  {
     int hostId;
     int connId;
     int chanId;
@@ -109,19 +116,13 @@ public class WebSocketServer : MonoBehaviour
           } else {
             Debug.LogError("WSS:Update] UNKNOWN tag type:" + obj.tag);
           }
-        break;
+        return true;
       default:
         Debug.Log("[WSS:Update] SOMETHING ELSE");
         break;
     }
 
-    // test
-    /*
-    byte[] buf = System.Text.Encoding.UTF8.GetBytes("{HI}");
-    //int bufCount = System.Text.Encoding.UTF8.GetByteCount("{HI}");
-    bool result = NetworkTransport.Send(hostId, connId, chanId, buf, buf.Length, out errorCode);
-    Debug.Log("[WSS:Update] result=" + result + " ERROR:" + errorCode);
-*/
+    return false;
   }
 
   //------------------------------------------------------------------------

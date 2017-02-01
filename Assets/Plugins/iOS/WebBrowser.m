@@ -6,12 +6,14 @@
 //  Copyright © 2016 AntiMass. All rights reserved.
 //
 
-#import <TargetConditionals.h>
 #import "WebBrowser.h"
 
+#if !TARGET_OS_IOS
 @import Foundation;
-
 static NSWindow* _webWindow = nil;
+#else
+#import <Foundation/Foundation.h>
+#endif
 
 @implementation ViewController
 
@@ -19,6 +21,7 @@ static NSWindow* _webWindow = nil;
   NSLog(@"[VC:loadView] ");
   NSURL* url = [NSURL URLWithString:@"https://google.ca"];
   
+#if !TARGET_OS_IOS
   _webView = [[WKWebView alloc] initWithFrame:NSMakeRect(0, 0, 600, 800)];
   _webView.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
   _webView.wantsLayer = YES;
@@ -26,6 +29,7 @@ static NSWindow* _webWindow = nil;
   self.view = _webView;
   
   [_webView loadRequest:[NSURLRequest requestWithURL:url]];
+#endif
 }
 
 - (void)viewWillAppear {
@@ -37,6 +41,7 @@ static NSWindow* _webWindow = nil;
 int openBrowser() {
   NSLog(@"[WebBrowser:openBrowser] Called5");
   
+#if !TARGET_OS_IOS
   if(_webWindow != nil)
   {
     [_webWindow makeKeyAndOrderFront:nil];
@@ -52,11 +57,15 @@ int openBrowser() {
   _webWindow.contentViewController = vc;
   
   [_webWindow makeKeyAndOrderFront:nil];
-  return 46;
+#endif
+    
+  return 47;
   
 }
 
 void closeBrowser() {
+#if !TARGET_OS_IOS
   [_webWindow orderOut:nil];
+#endif
 }
 
