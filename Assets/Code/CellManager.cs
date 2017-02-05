@@ -53,6 +53,7 @@ public class CellManager : ScriptableObject {
 
   public void addCell(Cell _cell) {
     Debug.Log("[CM:addCell] Adding new cell:"+m_cells.Count);
+
     // Set the Cell's root obj
     int[] p = _cell.pos;
     _cell.rootObj = new GameObject("CellRoot");
@@ -92,16 +93,16 @@ public class CellManager : ScriptableObject {
 
     Debug.Log("[CM:dumpInfo]  # cells:" + m_cells.Count + "\n" + cellInfo);
 
-    m_dispatchFn("TEST CALLBACK");
+    m_dispatchFn("\"TEST CALLBACK\"");
   }
 
   private void sendPong() {
-  
+
   }
 
   public void handleCellMsg(CellMsg _msg) {
     switch(_msg.cmd) {
-      case "new-cell":
+      case "add":
         Debug.Log("[CM:handleCell] NEW CELL:"+_msg.cell);
         addCell(_msg.cell);
         break;

@@ -3,14 +3,12 @@ using UnityEngine.Networking;
 using System.Collections.Generic;
 
 [System.Serializable]
-public class TagObj
-{
+public class TagObj {
   public string tag;
 }
 
 [System.Serializable]
-public class NubMsg
-{
+public class NubMsg {
   public float[] pos;
   public string style;
   public string tag;
@@ -18,36 +16,48 @@ public class NubMsg
 }
 
 [System.Serializable]
-public class Hex
-{
+public class Hex {
   public float[] pos;
   public string style;
   public GameObject obj;
 }
 
 [System.Serializable]
-public class CellMsg
-{
+public class CellMsg {
   public string tag;
   public string cmd;
   public Cell cell;
 }
 
-public class WebSocketServer : MonoBehaviour
-{
+public class WebSocketServer : MonoBehaviour {
+  private ushort s_maxReceiveBufferSize = 1024 * 20;
   int m_hostId;
   int m_chanId;
   int m_connId;
   private CellManager m_cellManager;
 
-  public GameObject m_envRoot;
-  public GameObject m_stdHex;
+  private GameObject m_envRoot;
+  private GameObject m_stdHex;
+
+  //------------------------------------------------------------------------
+  void Awake() {
+    Debug.Log("[WSS:Awake] Call...");
+    m_stdHex = Resources.Load<GameObject>("Geom/stdHex");
+  }
 
   //------------------------------------------------------------------------
   void Start() {
     SetupServer();
     m_cellManager = ScriptableObject.CreateInstance<CellManager>();
     m_cellManager.setDispatchFn(dispatch);
+
+    MCP mcp = FindObjectOfType<MCP>();
+    if(mcp != null) {
+      print("[WSS:Start] FOUND MCP");
+      mcp.setDispatchFn(dispatch);
+    } else {
+      print("[WSS:Start] FAILED to find MCP");
+    }
 
     // don't open if in editor
 #if !UNITY_EDITOR
@@ -79,17 +89,17 @@ public class WebSocketServer : MonoBehaviour
       ;
   }
 
-  bool tickReceivedPackets()
-  {
+  bool tickReceivedPackets() {
     int hostId;
     int connId;
     int chanId;
-    byte[] buffer = new byte[1024];
+    int bufferSize = s_maxReceiveBufferSize;
+    byte[] buffer = new byte[bufferSize];
     int recSize;
     byte errorCode;
 
     NetworkEventType recData = NetworkTransport.Receive(out hostId,
-                                     out connId, out chanId, buffer, 1024, out recSize, out errorCode);
+                                     out connId, out chanId, buffer, bufferSize, out recSize, out errorCode);
 
     switch(recData) {
       case NetworkEventType.Nothing:
@@ -111,11 +121,11 @@ public class WebSocketServer : MonoBehaviour
           Debug.Log("[WSS:Update] Got a hex obj");
           handleHex(msg);
         } else if(obj.tag == "cell") {
-            Debug.Log("[WSS:Update] Got a Cell obj");
-            handleCell(msg);
-          } else {
-            Debug.LogError("WSS:Update] UNKNOWN tag type:" + obj.tag);
-          }
+          Debug.Log("[WSS:Update] Got a Cell obj");
+          handleCell(msg);
+        } else {
+          Debug.LogError("WSS:Update] UNKNOWN tag type:" + obj.tag);
+        }
         return true;
       default:
         Debug.Log("[WSS:Update] SOMETHING ELSE");
@@ -127,13 +137,16 @@ public class WebSocketServer : MonoBehaviour
 
   //------------------------------------------------------------------------
   public void dispatch(string _str) {
-    Debug.Log("[WSS:dispatch] Need to dispatch:" + _str);
+    //Debug.Log("[WSS:dispatch] Need to dispatch:" + _str);
 
     byte errorCode;
-    byte[] buf = System.Text.Encoding.UTF8.GetBytes("{\"HI\": 23}");
+    byte[] buf = System.Text.Encoding.UTF8.GetBytes("{\"msg\": " + _str + "}");
     //int bufCount = System.Text.Encoding.UTF8.GetByteCount("{HI}");
     bool result = NetworkTransport.Send(m_hostId, m_connId, m_chanId, buf, buf.Length, out errorCode);
-    Debug.Log("[WSS:dispatch] result=" + result + " ERROR:" + errorCode);
+
+    if(errorCode != 0) {
+      Debug.Log("[WSS:dispatch] ERROR: result=" + result + " ERROR:" + errorCode);
+    }
   }
 
   //------------------------------------------------------------------------
@@ -145,15 +158,15 @@ public class WebSocketServer : MonoBehaviour
         Vector3 pos = new Vector3(nub.pos[0], nub.pos[1], nub.pos[2]);
         GameObject hex = Instantiate(m_stdHex, pos, Quaternion.identity);
         hex.name = "hex";
-        hex.transform.parent = m_envRoot.transform;
+        //hex.transform.parent = m_envRoot.transform;
         break;
 
       case "delete-all":
         Debug.Log("[WSS:handleHex] delete-all cmd");
-        int numChild = m_envRoot.transform.childCount;
+/*        int numChild = m_envRoot.transform.childCount;
         for(int i = numChild; i > 0; i--) {
           Destroy(m_envRoot.transform.GetChild(i - 1).gameObject);
-        }
+        }*/
         break;
 
       default:
@@ -173,12 +186,13 @@ public class WebSocketServer : MonoBehaviour
     Debug.Log("[WSS:SetupServer] CALLED");
     NetworkTransport.Init();
     ConnectionConfig config = new ConnectionConfig();
+    config.WebSocketReceiveBufferMaxSize = s_maxReceiveBufferSize;
     m_chanId = config.AddChannel(QosType.Reliable);
     HostTopology topology = new HostTopology(config, 10);
     m_hostId = NetworkTransport.AddWebsocketHost(topology, 9001, null);
     Debug.Log("[WSS:SetupServer] WebSocket HostID:" + m_hostId + "  ChanID:" + m_chanId);
   }
-    
+
 #if UNITY_EDITOR
   [UnityEditor.Callbacks.DidReloadScripts]
   private static void OnScriptsReloaded() {
