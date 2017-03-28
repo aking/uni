@@ -1,4 +1,12 @@
 {
+    "editor.formatOnType": true,
+    "editor.insertSpaces": true,
+    "editor.tabSize": 2,
+    "files.associations": {
+        "*.cljs": "clojure"
+    },
+    "files.eol": "\n",
+    "files.trimTrailingWhitespace": true,
     "files.exclude":
     {
         "**/.DS_Store":true,
@@ -51,7 +59,19 @@
         "Obj/":true,
         "ProjectSettings/":true,
         "temp/":true,
-        "Temp/":true
+        "Temp/":true,
+        "**/resources/public/js":true,
+        "Assembly-CS*":true,
+        "*sln":true,
+        "v01d/target/":true,
+        "v01d/*-init.clj":true
     },
-    "editor.tabSize": 2
+    "search.exclude": {
+        "**/node_modules": true,
+        "**/bower_components": true,
+        "**/resources/public/js": true,
+        "Assets/Standard Assets": true,
+        "**/v01d/target": true,
+        "**/*.csproj": true
+    }
 }

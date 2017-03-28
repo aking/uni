@@ -29,17 +29,19 @@ public class SimpleHTTPServerComponent : MonoBehaviour
   }
 
   void OnApplicationQuit() {
-    m_server.Stop();
+    if(m_server != null) {
+      m_server.Stop();
+    }
   }
 
 
   class SimpleHTTPServer
   {
-    private readonly string[] _indexFiles = { 
-      "index.html", 
-      "index.htm", 
-      "default.html", 
-      "default.htm" 
+    private readonly string[] _indexFiles = {
+      "index.html",
+      "index.htm",
+      "default.html",
+      "default.htm"
     };
 
     private static IDictionary<string, string> _mimeTypeMappings = new Dictionary<string, string>(StringComparer.InvariantCultureIgnoreCase)

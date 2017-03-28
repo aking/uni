@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
+using UnityEditor;
 using System.Collections.Generic;
 
 [System.Serializable]
@@ -8,17 +9,28 @@ public class TagObj {
 }
 
 [System.Serializable]
-public class NubMsg {
+public class Nub {
   public float[] pos;
-  public string style;
-  public string tag;
-  public string cmd;
+  public string id;
+  public string name;
+  public string creator;
+  public string prim;
+  public float radius;
 }
 
 [System.Serializable]
-public class Hex {
+public class NubMsg {
+  public string tag;
+  public string cmd;
+  public string id;
+  public Nub nub;
+}
+
+[System.Serializable]
+public class HexMsg {
   public float[] pos;
   public string style;
+  public string cmd;
   public GameObject obj;
 }
 
@@ -29,7 +41,15 @@ public class CellMsg {
   public Cell cell;
 }
 
-public class WebSocketServer : MonoBehaviour {
+[System.Serializable]
+public class Hex {
+  public float[] pos;
+  public string style;
+  public GameObject obj;
+}
+
+//public class WebSocketServer : MonoBehaviour {
+public class WebSocketServer : ScriptableObject {
   private ushort s_maxReceiveBufferSize = 1024 * 20;
   int m_hostId;
   int m_chanId;
@@ -38,26 +58,33 @@ public class WebSocketServer : MonoBehaviour {
 
   private GameObject m_envRoot;
   private GameObject m_stdHex;
+  private GameObject m_coreNub;
 
   //------------------------------------------------------------------------
   void Awake() {
     Debug.Log("[WSS:Awake] Call...");
     m_stdHex = Resources.Load<GameObject>("Geom/stdHex");
+
+    m_coreNub = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Prefabs/Nub.prefab", typeof(GameObject));
+
+    Debug.Assert(m_coreNub!=null, "[WSS:Awake] Unable to find Nub prefab");
   }
 
   //------------------------------------------------------------------------
-  void Start() {
+  public void init() {
     SetupServer();
     m_cellManager = ScriptableObject.CreateInstance<CellManager>();
     m_cellManager.setDispatchFn(dispatch);
 
+/*
     MCP mcp = FindObjectOfType<MCP>();
     if(mcp != null) {
-      print("[WSS:Start] FOUND MCP");
+      Debug.Log("[WSS:Start] FOUND MCP");
       mcp.setDispatchFn(dispatch);
     } else {
-      print("[WSS:Start] FAILED to find MCP");
+      Debug.Log("[WSS:Start] FAILED to find MCP");
     }
+    */
 
     // don't open if in editor
 #if !UNITY_EDITOR
@@ -83,7 +110,7 @@ public class WebSocketServer : MonoBehaviour {
   }
 
   //------------------------------------------------------------------------
-  void Update() {
+  public void update() {
     int packetsPerTick = 20;
     while(--packetsPerTick > 0 && tickReceivedPackets())
       ;
@@ -123,6 +150,9 @@ public class WebSocketServer : MonoBehaviour {
         } else if(obj.tag == "cell") {
           Debug.Log("[WSS:Update] Got a Cell obj");
           handleCell(msg);
+        } else if(obj.tag == "nub") {
+          Debug.Log("[WSS:Update] Got a NUB obj");
+          handleNub(msg);
         } else {
           Debug.LogError("WSS:Update] UNKNOWN tag type:" + obj.tag);
         }
@@ -151,7 +181,7 @@ public class WebSocketServer : MonoBehaviour {
 
   //------------------------------------------------------------------------
   void handleHex(string _msg) {
-    NubMsg nub = JsonUtility.FromJson<NubMsg>(_msg);
+    HexMsg nub = JsonUtility.FromJson<HexMsg>(_msg);
     switch(nub.cmd) {
       case "add":
         Debug.Log("[WSS:handleHex] add cmd");
@@ -171,6 +201,44 @@ public class WebSocketServer : MonoBehaviour {
 
       default:
         Debug.Log("[WSS:handleHex] UNKNOWN cmd:" + nub.cmd);
+        break;
+    }
+  }
+
+  //------------------------------------------------------------------------
+  void handleNub(string _msg) {
+    NubMsg nubMsg = JsonUtility.FromJson<NubMsg>(_msg);
+    switch(nubMsg.cmd) {
+      case "add":
+        Debug.Log("[WSS:handleNub] add cmd");
+
+        Nub nubData = nubMsg.nub;
+        Vector3 pos = new Vector3(nubData.pos[0], nubData.pos[1], nubData.pos[2]);
+
+        GameObject nub = null;
+        nub = Instantiate(m_coreNub, pos, Quaternion.identity);
+        nub.GetComponent<NubInfo>().init(nubData);
+
+        nub.tag = "Player";
+        nub.transform.position = pos;
+
+        //hex.transform.parent = m_envRoot.transform;
+        break;
+
+      case "remove":
+        Debug.Log("[WSS:handleNub] remove cmd");
+        break;
+
+      case "delete-all":
+        Debug.Log("[WSS:handleNub] delete-all cmd");
+/*        int numChild = m_envRoot.transform.childCount;
+        for(int i = numChild; i > 0; i--) {
+          Destroy(m_envRoot.transform.GetChild(i - 1).gameObject);
+        }*/
+        break;
+
+      default:
+        Debug.Log("[WSS:handleNub] UNKNOWN cmd:" + nubMsg.cmd);
         break;
     }
   }

@@ -12,14 +12,33 @@ struct WisperMsg {
 [System.Serializable]
 public class MCP : MonoBehaviour {
 
-  [SerializeField]
-  private dispatchDelegate m_dispatchFn;
-  [SerializeField]
+  private WebSocketServer m_socketServer;
   private GameObject m_player;
 
+  // doesn't serialize
+  private dispatchDelegate m_dispatchFn;
+
+  void OnEnable() {
+    Debug.Log("[MCP:OnEnable] Called");
+
+    if(m_socketServer == null) {
+      Debug.Log("[MCP:OnEnable] WebSocket server NULL!");
+      return;
+    }
+
+    if(m_dispatchFn == null) {
+      Debug.Log("[MCP:OnEnable] Dispatch fn is NULL!");
+      m_dispatchFn = m_socketServer.dispatch;
+    }
+  }
+
   void Start() {
+    m_socketServer = ScriptableObject.CreateInstance<WebSocketServer>();
+    m_socketServer.init();
+    m_dispatchFn = m_socketServer.dispatch;
+
     m_player = GameObject.FindWithTag("Player");
-    print("[MCP:Start] Player:" + (m_player ? "FOUND" : "NOT FOUND"));
+    Debug.Log("[MCP:Start] Player:" + (m_player ? "FOUND" : "NOT FOUND"));
 
     WisperMsg msg = new WisperMsg();
     msg.cmd = "cmd";
@@ -32,15 +51,18 @@ public class MCP : MonoBehaviour {
   }
 
   void Update() {
-    if(!m_player)
-      return;
+    if(m_socketServer != null)
+      m_socketServer.update();
+
+    if(!m_player) {
+      m_player = GameObject.FindWithTag("Player");
+      if(!m_player)
+        return;
+    }
 
     // send position
     Vector3 pos = m_player.transform.position;
-    m_dispatchFn("{\"pos\" : [" + pos.x + ", " + pos.y + ", " + pos.z + "]}");
-  }
-
-  public void setDispatchFn(dispatchDelegate _fn) {
-    m_dispatchFn = _fn;
+    if(m_dispatchFn != null)
+      m_dispatchFn("{\"pos\" : [" + pos.x + ", " + pos.y + ", " + pos.z + "]}");
   }
 }
