@@ -9,14 +9,14 @@ PlayerSettings:
   defaultScreenOrientation: 4
   targetDevice: 2
   useOnDemandResources: 0
-  accelerometerFrequency: 60
-  companyName: DefaultCompany
-  productName: ava
+  accelerometerFrequency: 100
+  companyName: AntiMass Tech
+  productName: VoxelBash
   defaultCursor: {fileID: 0}
   cursorHotspot: {x: 0, y: 0}
   m_SplashScreenBackgroundColor: {r: 0.13333334, g: 0.17254902, b: 0.21176471, a: 1}
-  m_ShowUnitySplashScreen: 1
-  m_ShowUnitySplashLogo: 1
+  m_ShowUnitySplashScreen: 0
+  m_ShowUnitySplashLogo: 0
   m_SplashScreenOverlayOpacity: 1
   m_SplashScreenAnimation: 1
   m_SplashScreenLogoStyle: 1
@@ -56,9 +56,9 @@ PlayerSettings:
   tizenShowActivityIndicatorOnLoading: -1
   iosAppInBackgroundBehavior: 0
   displayResolutionDialog: 1
-  iosAllowHTTPDownload: 1
-  allowedAutorotateToPortrait: 1
-  allowedAutorotateToPortraitUpsideDown: 1
+  iosAllowHTTPDownload: 0
+  allowedAutorotateToPortrait: 0
+  allowedAutorotateToPortraitUpsideDown: 0
   allowedAutorotateToLandscapeRight: 1
   allowedAutorotateToLandscapeLeft: 1
   useOSAutorotation: 1
@@ -85,6 +85,7 @@ PlayerSettings:
   xboxEnableFitness: 0
   visibleInBackground: 0
   allowFullscreenSwitch: 1
+  graphicsJobMode: 0
   macFullscreenMode: 2
   d3d9FullscreenMode: 1
   d3d11FullscreenMode: 1
@@ -118,7 +119,7 @@ PlayerSettings:
     16:10: 1
     16:9: 1
     Others: 1
-  bundleIdentifier: com.antimass.ava
+  bundleIdentifier: net.antimass.VoxelBash
   bundleVersion: 0.1
   preloadedAssets: []
   metroInputSource: 0
@@ -144,7 +145,7 @@ PlayerSettings:
     serializedVersion: 2
     m_Bits: 238
   iPhoneSdkVersion: 988
-  iOSTargetOSVersionString: 10.0
+  iOSTargetOSVersionString: 10.2
   tvOSSdkVersion: 0
   tvOSRequireExtendedGameController: 0
   tvOSTargetOSVersionString: 
@@ -169,7 +170,7 @@ PlayerSettings:
   tvOSLargeIconLayers: []
   tvOSTopShelfImageLayers: []
   tvOSTopShelfImageWideLayers: []
-  iOSLaunchScreenType: 0
+  iOSLaunchScreenType: 3
   iOSLaunchScreenPortrait: {fileID: 0}
   iOSLaunchScreenLandscape: {fileID: 0}
   iOSLaunchScreenBackgroundColor:
@@ -213,8 +214,18 @@ PlayerSettings:
   m_BuildTargetGraphicsAPIs:
   - m_BuildTarget: iOSSupport
     m_APIs: 10000000
-    m_Automatic: 0
-  m_BuildTargetVRSettings: []
+    m_Automatic: 1
+  m_BuildTargetVRSettings:
+  - m_BuildTarget: Standalone
+    m_Enabled: 0
+    m_Devices:
+    - Oculus
+    - split
+  - m_BuildTarget: Android
+    m_Enabled: 0
+    m_Devices:
+    - Oculus
+    - split
   openGLRequireES31: 0
   openGLRequireES31AEP: 0
   webPlayerTemplate: APPLICATION:Default
@@ -390,7 +401,8 @@ PlayerSettings:
     17: 
     20: 
     22: 
-  platformArchitecture: {}
+  platformArchitecture:
+    iOS: 1
   scriptingBackend: {}
   incrementalIl2cppBuild: {}
   additionalIl2CppArgs: 
@@ -429,7 +441,7 @@ PlayerSettings:
   tizenMicrophonePermissions: 0
   tizenDeploymentTarget: 
   tizenDeploymentTargetType: 0
-  tizenMinOSVersion: 0
+  tizenMinOSVersion: 1
   n3dsUseExtSaveData: 0
   n3dsCompressStaticMem: 1
   n3dsExtSaveDataNumber: 0x12345

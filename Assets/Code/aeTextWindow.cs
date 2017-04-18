@@ -41,7 +41,7 @@ public class aeTextWindow : MonoBehaviour {
   void OnGUI() {
     //if(Event.current.Equals(Event.KeyboardEvent("[enter]")))
     Event e = Event.current;
-    Debug.Log("[aeTW:OnGUI] " + e);
+    //Debug.Log("[aeTW:OnGUI] " + e);
   }
 
   void OnEnable() {

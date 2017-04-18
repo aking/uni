@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using UnityEngine.Networking;
-using UnityEditor;
-using System.Collections.Generic;
+
+#if UNITY_EDITOR
+  using UnityEditor;
+#endif
 
 [System.Serializable]
 public class TagObj {
@@ -65,7 +67,9 @@ public class WebSocketServer : ScriptableObject {
     Debug.Log("[WSS:Awake] Call...");
     m_stdHex = Resources.Load<GameObject>("Geom/stdHex");
 
+#if UNITY_EDITOR
     m_coreNub = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Prefabs/Nub.prefab", typeof(GameObject));
+#endif
 
     Debug.Assert(m_coreNub!=null, "[WSS:Awake] Unable to find Nub prefab");
   }
