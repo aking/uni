@@ -5,51 +5,12 @@ using UnityEngine.Networking;
   using UnityEditor;
 #endif
 
+public delegate void dispatchDelegate(string _msg);
+
 [System.Serializable]
 public class TagObj {
   public string tag;
 }
-
-[System.Serializable]
-public class Nub {
-  public float[] pos;
-  public string id;
-  public string name;
-  public string creator;
-  public string prim;
-  public float radius;
-}
-
-[System.Serializable]
-public class NubMsg {
-  public string tag;
-  public string cmd;
-  public string id;
-  public Nub nub;
-}
-
-[System.Serializable]
-public class HexMsg {
-  public float[] pos;
-  public string style;
-  public string cmd;
-  public GameObject obj;
-}
-
-[System.Serializable]
-public class CellMsg {
-  public string tag;
-  public string cmd;
-  public Cell cell;
-}
-
-[System.Serializable]
-public class Hex {
-  public float[] pos;
-  public string style;
-  public GameObject obj;
-}
-
 //public class WebSocketServer : MonoBehaviour {
 public class WebSocketServer : ScriptableObject {
   private ushort s_maxReceiveBufferSize = 1024 * 20;
@@ -58,9 +19,11 @@ public class WebSocketServer : ScriptableObject {
   int m_connId;
   private CellManager m_cellManager;
 
-  private GameObject m_envRoot;
+  //private GameObject m_envRoot;
   private GameObject m_stdHex;
   private GameObject m_coreNub;
+
+  private MCP m_mcp;
 
   //------------------------------------------------------------------------
   void Awake() {
@@ -75,7 +38,8 @@ public class WebSocketServer : ScriptableObject {
   }
 
   //------------------------------------------------------------------------
-  public void init() {
+  public void init(MCP _mcp) {
+    m_mcp = _mcp;
     SetupServer();
     m_cellManager = ScriptableObject.CreateInstance<CellManager>();
     m_cellManager.setDispatchFn(dispatch);
@@ -156,7 +120,7 @@ public class WebSocketServer : ScriptableObject {
           handleCell(msg);
         } else if(obj.tag == "nub") {
           Debug.Log("[WSS:Update] Got a NUB obj");
-          handleNub(msg);
+          m_mcp.handleNub(msg);
         } else {
           Debug.LogError("WSS:Update] UNKNOWN tag type:" + obj.tag);
         }
@@ -171,7 +135,7 @@ public class WebSocketServer : ScriptableObject {
 
   //------------------------------------------------------------------------
   public void dispatch(string _str) {
-    //Debug.Log("[WSS:dispatch] Need to dispatch:" + _str);
+    Debug.Log("[WSS:dispatch] Need to dispatch [" + _str.Length + "]:" + _str);
 
     byte errorCode;
     byte[] buf = System.Text.Encoding.UTF8.GetBytes("{\"msg\": " + _str + "}");
@@ -205,44 +169,6 @@ public class WebSocketServer : ScriptableObject {
 
       default:
         Debug.Log("[WSS:handleHex] UNKNOWN cmd:" + nub.cmd);
-        break;
-    }
-  }
-
-  //------------------------------------------------------------------------
-  void handleNub(string _msg) {
-    NubMsg nubMsg = JsonUtility.FromJson<NubMsg>(_msg);
-    switch(nubMsg.cmd) {
-      case "add":
-        Debug.Log("[WSS:handleNub] add cmd");
-
-        Nub nubData = nubMsg.nub;
-        Vector3 pos = new Vector3(nubData.pos[0], nubData.pos[1], nubData.pos[2]);
-
-        GameObject nub = null;
-        nub = Instantiate(m_coreNub, pos, Quaternion.identity);
-        nub.GetComponent<NubInfo>().init(nubData);
-
-        nub.tag = "Player";
-        nub.transform.position = pos;
-
-        //hex.transform.parent = m_envRoot.transform;
-        break;
-
-      case "remove":
-        Debug.Log("[WSS:handleNub] remove cmd");
-        break;
-
-      case "delete-all":
-        Debug.Log("[WSS:handleNub] delete-all cmd");
-/*        int numChild = m_envRoot.transform.childCount;
-        for(int i = numChild; i > 0; i--) {
-          Destroy(m_envRoot.transform.GetChild(i - 1).gameObject);
-        }*/
-        break;
-
-      default:
-        Debug.Log("[WSS:handleNub] UNKNOWN cmd:" + nubMsg.cmd);
         break;
     }
   }

@@ -8,12 +8,19 @@ public class NubInfo : MonoBehaviour {
   private static Mesh m_cubeMesh;
   public string m_id;
 
-  public void init(Nub _nubData) {
-    Debug.Log("[NubInfo:init] Called");
+  public void init(Core _nubData) {
+    Debug.Log("[NubInfo:init] Called:'" + _nubData.name + "'");
 
-    gameObject.name = _nubData.name;
+    // set nub name, if valid, otherwise the id
+    string nubName = _nubData.name;
+    if(nubName == null || nubName.Length == 0)
+      nubName = "NotSet";//_nubData.id;
+    gameObject.name = nubName;
+
     Mesh mesh = GetComponent<MeshFilter>().mesh;
-    switch (_nubData.prim)
+        GetComponent<MeshFilter>().mesh = m_sphereMesh;
+        gameObject.AddComponent<SphereCollider>();
+/*    switch (_nubData.prim)
     {
       case "sphere":
         GetComponent<MeshFilter>().mesh = m_sphereMesh;
@@ -29,6 +36,7 @@ public class NubInfo : MonoBehaviour {
         Debug.Log("[NubInfo:init] UNKNOWN mesh type:" + _nubData.prim);
         break;
     }
+    */
   }
 
   void Awake() {

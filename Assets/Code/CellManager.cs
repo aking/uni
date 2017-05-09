@@ -21,7 +21,7 @@ public class Cell {
   }
 }
 
-public delegate void dispatchDelegate(string _msg);
+//public delegate void dispatchDelegate(string _msg);
 
 [System.Serializable]
 public class CellManager : ScriptableObject {
