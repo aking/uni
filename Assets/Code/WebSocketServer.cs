@@ -138,8 +138,8 @@ public class WebSocketServer : ScriptableObject {
     Debug.Log("[WSS:dispatch] Need to dispatch [" + _str.Length + "]:" + _str);
 
     byte errorCode;
-    byte[] buf = System.Text.Encoding.UTF8.GetBytes("{\"msg\": " + _str + "}");
-    //int bufCount = System.Text.Encoding.UTF8.GetByteCount("{HI}");
+    //byte[] buf = System.Text.Encoding.UTF8.GetBytes("{\"msg\": " + _str + "}");
+    byte[] buf = System.Text.Encoding.UTF8.GetBytes(_str);
     bool result = NetworkTransport.Send(m_hostId, m_connId, m_chanId, buf, buf.Length, out errorCode);
 
     if(errorCode != 0) {

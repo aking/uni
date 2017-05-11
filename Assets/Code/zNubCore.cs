@@ -44,18 +44,17 @@ public class zNubCore : MonoBehaviour
   }
 
   //------------------------------------------------------------------------
-  internal void dispatchMsg(BodyMsg _msg) {
+  internal void dispatchMsg(string _gene, BodyMsg _msg) {
     BodyNubMsg nubMsg = new BodyNubMsg();
-    nubMsg.id = m_id;
-    nubMsg.cmd = "info";
     nubMsg.tag = "nub";
+    nubMsg.id = m_id;
+    nubMsg.cmd = _gene;
     nubMsg.msg = _msg;
     m_dispatchQueue.Enqueue(nubMsg);
   }
 
   //------------------------------------------------------------------------
-  internal void newMessage(Msg _msg)
-  {
+  internal void newMessage(Msg _msg) {
     m_msgQueue.Enqueue(_msg);
   }
 
