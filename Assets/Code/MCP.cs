@@ -148,7 +148,7 @@ public class MCP : MonoBehaviour {
 
         GameObject nub = null;
         if(m_nubMap.TryGetValue(nubMsg.id, out nub)) {
-            Debug.Log("[MCP:handleNub] FOUND NUB IN CACHE");
+            Debug.Log("[MCP:handleNub:remove] FOUND NUB IN CACHE");
             m_nubMap.Remove(nubMsg.id);
             Destroy(nub);
         } else {
@@ -189,6 +189,17 @@ public class MCP : MonoBehaviour {
             Debug.Log("[MCP:handleNub:MSG] NUB NOT FOUND IN CACHE");
         }
 
+        break;
+      }
+
+      case "window": { // gene!
+        GameObject nub;
+        if(m_nubMap.TryGetValue(nubMsg.id, out nub)) {
+            Debug.Log("[MCP:handleNub:window] FOUND NUB IN CACHE");
+            nub.GetComponent<zNubCore>().newMessage(nubMsg.msg);
+        } else {
+            Debug.Log("[MCP:handleNub:window] NUB NOT FOUND IN CACHE:" + nubMsg.id);
+        }
         break;
       }
 

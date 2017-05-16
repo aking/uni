@@ -1,8 +1,12 @@
 {
   "editor.detectIndentation": false,
   "editor.insertSpaces": true,
+  "editor.rulers": [80],
   "editor.tabSize": 2,
+  "files.eol": "\n",
+  "files.trimTrailingWhitespace": true,
   "omnisharp.useEditorFormattingSettings": true,
+
   "files.exclude": {
     "**/compiled": true,
     "**/Builds": true,

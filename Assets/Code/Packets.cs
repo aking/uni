@@ -18,6 +18,7 @@ public class Window {
 [System.Serializable]
 public class Msg {
   public string text;
+  public int[] cursor;
 }
 
 [System.Serializable]
@@ -39,6 +40,8 @@ public class NubMsg {
 [System.Serializable]
 public class BodyMsg {
   public string type;
+  public int keycode;
+  public string text;
   public int button;
   public int[] pos;
 }
