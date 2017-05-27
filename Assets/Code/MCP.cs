@@ -17,6 +17,7 @@ public class MCP : MonoBehaviour {
   public Camera m_activeCamera;
 
   private WebSocketServer m_socketServer;
+  private CellManager m_cellManager;
   private GameObject m_player;
 
   // doesn't serialize
@@ -63,8 +64,9 @@ public class MCP : MonoBehaviour {
     m_nubMap = new Dictionary<string, GameObject>();
     m_dispatchQueue = new Queue<BodyNubMsg>();
 
+    m_cellManager = ScriptableObject.CreateInstance<CellManager>();
     m_socketServer = ScriptableObject.CreateInstance<WebSocketServer>();
-    m_socketServer.init(this);
+    m_socketServer.init(this, m_cellManager);
     m_dispatchFn = m_socketServer.dispatch;
 
     m_player = GameObject.FindWithTag("Player");
@@ -122,6 +124,27 @@ public class MCP : MonoBehaviour {
     }
     Debug.LogWarning("[MCP:findNub] Unable to find nub:" + _id);
     return null;
+  }
+
+  //------------------------------------------------------------------------
+  internal void handleCmd(string _msg) {
+    BodyCmdMsg cmdMsg = JsonUtility.FromJson<BodyCmdMsg>(_msg);
+    switch(cmdMsg.cmd) {
+      case "reset":
+        Debug.Log("[MCP:handleCmd] RESET requested");
+        foreach (var item in m_nubMap) {
+          Debug.Log("[MCP:handleCmd] Deleteing Nub:" + item.Key);
+          Destroy(item.Value);
+        }
+        m_nubMap.Clear();
+
+        m_cellManager.deleteAll();
+        break;
+
+      default:
+        Debug.Log("[MCP:handleCmd] Unknown cmd:" + cmdMsg.cmd);
+        break;
+    }
   }
 
   //------------------------------------------------------------------------

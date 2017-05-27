@@ -97,11 +97,19 @@ public class zTextWindow : MonoBehaviour, IPointerClickHandler {
 
     if(Input.anyKey) {
       if(Input.inputString.Length > 0) {
-        BodyMsg bmsg = new BodyMsg();
-        //Debug.Log("[zTW:Update] TEXT[" + Input.inputString.Length + "]: " + Input.inputString);
-        bmsg.type = "char";
-        bmsg.text = Input.inputString;
-        m_core.dispatchMsg("window", bmsg);
+        // verify it's a valid value. macOS seems to generate 'strings' for
+        // arrow key values
+        int iValue = Input.inputString[0];
+        // is ascii?
+        if(iValue < 256 && iValue >= 8) {
+          BodyMsg bmsg = new BodyMsg();
+          bmsg.type = "char";
+          bmsg.text = Input.inputString;
+          m_core.dispatchMsg("window", bmsg);
+        } else {
+          Debug.Log("[zTW:Update] INVALID TEXT[" + Input.inputString.Length + "]: " +
+                       Input.inputString + " [" + iValue + "]");
+        }
       }
     }
 

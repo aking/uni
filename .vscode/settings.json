@@ -8,6 +8,8 @@
   "omnisharp.useEditorFormattingSettings": true,
 
   "files.exclude": {
+    "**/*-init.clj": true,
+    "**/.lein-repl-history": true,
     "**/compiled": true,
     "**/Builds": true,
     "**/MORPH3D": true,

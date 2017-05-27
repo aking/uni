@@ -38,10 +38,10 @@ public class WebSocketServer : ScriptableObject {
   }
 
   //------------------------------------------------------------------------
-  public void init(MCP _mcp) {
+  public void init(MCP _mcp, CellManager _cm) {
     m_mcp = _mcp;
     SetupServer();
-    m_cellManager = ScriptableObject.CreateInstance<CellManager>();
+    m_cellManager = _cm;
     m_cellManager.setDispatchFn(dispatch);
 
 /*
@@ -121,6 +121,9 @@ public class WebSocketServer : ScriptableObject {
         } else if(obj.tag == "nub") {
           Debug.Log("[WSS:Update] Got a NUB obj");
           m_mcp.handleNub(msg);
+        } else if(obj.tag == "body") {
+          Debug.Log("[WSS:Update] Got a BODY cmd");
+          m_mcp.handleCmd(msg);
         } else {
           Debug.LogError("WSS:Update] UNKNOWN tag type:" + obj.tag);
         }

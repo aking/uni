@@ -55,6 +55,12 @@ public class BodyNubMsg {
 }
 
 [System.Serializable]
+public class BodyCmdMsg {
+  public string tag;
+  public string cmd;
+}
+
+[System.Serializable]
 public class HexMsg {
   public float[] pos;
   public string style;
