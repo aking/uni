@@ -75,4 +75,28 @@ public class zNubCore : MonoBehaviour
   internal Msg popMessage() {
     return m_msgQueue.Dequeue();
   }
+
+  void OnCollisionEnter(Collision _col) {
+    foreach (ContactPoint contact in _col.contacts)
+    {
+      Debug.DrawRay(contact.point, contact.normal, Color.blue);
+      BodyMsg bm = new BodyMsg();
+      bm.type = "collision";
+      bm.hitName = contact.otherCollider.name;
+      bm.pos = new float[3];
+      bm.normal = new float[3];
+      for (int i = 0; i < 3; ++i) {
+        bm.pos[i] = contact.point[i];
+        bm.normal[i] = contact.normal[i];
+      }
+
+      dispatchMsg("core", bm);
+    }
+
+    if (_col.relativeVelocity.magnitude > 2) {
+      AudioSource audio = GetComponent<AudioSource>();
+      if(audio)
+        audio.Play();
+    }
+  }
 }

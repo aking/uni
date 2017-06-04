@@ -3,20 +3,15 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [System.Serializable]
-public class NubInfo : MonoBehaviour {
+public class zNubVisual : MonoBehaviour {
   private static Mesh m_sphereMesh;
   private static Mesh m_cubeMesh;
-  public string m_id;
+  public string m_visualType;
 
-  public void init(Core _nubData) {
-    Debug.Log("[NubInfo:init] Called:'" + _nubData.name + "'");
+  public void init(Visual _vis) {
+    Debug.Log("[zNubVisual:init] Called");
 
     // set nub name, if valid, otherwise the id
-    string nubName = _nubData.name;
-    if(nubName == null || nubName.Length == 0)
-      nubName = "NotSet";//_nubData.id;
-    gameObject.name = nubName;
-
     Mesh mesh = GetComponent<MeshFilter>().mesh;
         GetComponent<MeshFilter>().mesh = m_sphereMesh;
         gameObject.AddComponent<SphereCollider>();
@@ -33,14 +28,14 @@ public class NubInfo : MonoBehaviour {
         break;
 
       default:
-        Debug.Log("[NubInfo:init] UNKNOWN mesh type:" + _nubData.prim);
+        Debug.Log("[zNubVisual:init] UNKNOWN mesh type:" + _nubData.prim);
         break;
     }
     */
   }
 
   void Awake() {
-    Debug.Log("[NubInfo:Awake] Called");
+    Debug.Log("[zNubVisual:Awake] Called");
     // setup the sphere mesh if not already done
     if(m_sphereMesh == null) {
       GameObject sphereObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -57,7 +52,7 @@ public class NubInfo : MonoBehaviour {
   }
 
   void Start() {
-    Debug.Log("[NubInfo:Start] Called");
+    Debug.Log("[zNubVisual:Start] Called");
     //GetComponent<MeshFilter>().mesh = m_sphereMesh;
   }
 }

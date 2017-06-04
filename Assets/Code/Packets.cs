@@ -1,5 +1,8 @@
 using UnityEngine;
 
+//-----------------------------------------------------------------------------
+// Nub CREATION Msgs
+//-----------------------------------------------------------------------------
 [System.Serializable]
 public class Core {
   public float[] pos;
@@ -14,11 +17,10 @@ public class Window {
   public string text;
 }
 
-// To be replaced with a msgpack
 [System.Serializable]
-public class Msg {
-  public string text;
-  public int[] cursor;
+public class Visual {
+  public string prim;
+  public float radius;
 }
 
 [System.Serializable]
@@ -26,6 +28,17 @@ public class Nub {
   public string id;
   public Core core;
   public Window window;
+  public Visual visual;
+}
+
+//-----------------------------------------------------------------------------
+// Messages
+
+// To be replaced with a msgpack
+[System.Serializable]
+public class Msg {
+  public string text;
+  public int[] cursor;
 }
 
 [System.Serializable]
@@ -43,7 +56,9 @@ public class BodyMsg {
   public int keycode;
   public string text;
   public int button;
-  public int[] pos;
+  public float[] pos;
+  public float[] normal;
+  public string hitName;
 }
 
 [System.Serializable]

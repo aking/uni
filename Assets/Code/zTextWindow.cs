@@ -191,12 +191,10 @@ public class zTextWindow : MonoBehaviour, IPointerClickHandler {
     BodyMsg msg = new BodyMsg();
     msg.type = "mouseclick";
     msg.button = 0;
-    msg.pos = new int[3];
-    /*
-    msg.pos[0] = (int)(_data.worldPosition[0] + 0.5);
-    msg.pos[1] = (int)(_data.worldPosition[1] + 0.5);
-    msg.pos[2] = (int)(_data.worldPosition[2] + 0.5);
-    */
+    msg.pos = new float[3];
+    msg.pos[0] = _data.pointerCurrentRaycast.worldPosition[0];
+    msg.pos[1] = _data.pointerCurrentRaycast.worldPosition[1];
+    msg.pos[2] = _data.pointerCurrentRaycast.worldPosition[2];
     m_core.dispatchMsg("window", msg);
 
     m_hasFocus = this;

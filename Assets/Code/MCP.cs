@@ -20,6 +20,8 @@ public class MCP : MonoBehaviour {
   private CellManager m_cellManager;
   private GameObject m_player;
 
+  private GameObject m_sphereObj;
+
   // doesn't serialize
   private dispatchDelegate m_dispatchFn;
 
@@ -85,6 +87,9 @@ public class MCP : MonoBehaviour {
     //m_coreNub = (GameObject)AssetDatabase.LoadAssetAtPath("Assets/Prefabs/Nub.prefab", typeof(GameObject));
 #endif
 
+    m_sphereObj = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+    m_sphereObj.hideFlags = HideFlags.HideAndDontSave;
+    m_sphereObj.SetActive (false);
     Debug.Assert(m_coreNub!=null, "[WSS:Awake] Unable to find Nub prefab");
   }
 
@@ -156,7 +161,7 @@ public class MCP : MonoBehaviour {
 
         // determine type of nub to add.
         GameObject newNub = null;
-        if(nubMsg.nub.window != null) {
+        if(nubMsg.nub.window != null &&nubMsg.nub.window.width > 0) {
           newNub = addWindowNub(nubMsg.nub);
         } else {
           newNub = addNub(nubMsg.nub);
@@ -249,22 +254,46 @@ public class MCP : MonoBehaviour {
   }
 
   //------------------------------------------------------------------------
+  private void addSphereComponent(GameObject _nub, Visual _vis) {
+    float radius = _vis.radius;
+
+    MeshFilter mesh = _nub.GetComponent<MeshFilter>();
+    mesh.mesh = m_sphereObj.GetComponent<MeshFilter> ().mesh;
+
+    // Physics hack
+    //Rigidbody rb = _nub.GetComponent<Rigidbody> ();
+    //rb.isKinematic = true;
+
+    // Sphere Collider
+    SphereCollider col = _nub.AddComponent<SphereCollider> ();
+    col.radius = 0.5f;
+    PhysicMaterial mat = Resources.Load<PhysicMaterial> ("PhysMats/PerfectBounce");
+    col.material = mat;
+
+    // Scale as needed
+    _nub.transform.localScale = new Vector3 (radius, radius, radius);
+  }
+
+  //------------------------------------------------------------------------
   internal GameObject addNub(Nub _nub) {
-    return createCoreNub(m_coreNub, _nub);
-   /*
-    Core core = _nub.core;
-    Vector3 pos = new Vector3(core.pos[0], core.pos[1], core.pos[2]);
+    GameObject nub = createCoreNub(m_coreNub, _nub);
 
-    GameObject nub = Instantiate(m_coreNub, pos, Quaternion.identity);
-    zNubCore nubCore = nub.GetComponent<zNubCore>();
-    nubCore.init(_nub);
-    nubCore.setDispatchQueue(m_dispatchQueue);
+    switch(_nub.visual.prim) {
+      case "sphere": {
+        Debug.Log("[MCP:addNub] sphere visual");
+        addSphereComponent(nub, _nub.visual);
+        break;
+      }
 
-    nub.transform.position = pos;
-    nub.transform.rotation = Quaternion.Euler(core.rot[0], core.rot[1], core.rot[2]);
+      default: {
+        Debug.Log("[MCP:addNub] UNKNOWN visual prim");
+        addSphereComponent(nub, _nub.visual);
+        break;
+      }
+
+    }
 
     return nub;
-    */
   }
 
   //------------------------------------------------------------------------

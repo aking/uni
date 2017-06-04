@@ -4,6 +4,7 @@
 /[Bb]uild/
 /[Bb]uilds/
 /Assets/AssetStoreTools*
+/Assets/TextMesh Pro*
 sysinfo.txt
 *.pidb.meta
 
@@ -43,3 +44,6 @@ Thumbs.db
 *.blend1
 *.VC.db
 *.VC.opendb
+
+# misc
+v01d
