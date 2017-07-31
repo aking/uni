@@ -63,6 +63,9 @@ public class MCP : MonoBehaviour {
 
   //------------------------------------------------------------------------
   void Start() {
+    // test
+    WebSocket.init();
+
     m_nubMap = new Dictionary<string, GameObject>();
     m_dispatchQueue = new Queue<BodyNubMsg>();
 
@@ -97,6 +100,8 @@ public class MCP : MonoBehaviour {
   void Update() {
     if(m_socketServer != null)
       m_socketServer.update();
+
+    WebSocket.tick();
 
     if(m_dispatchQueue.Count > 0) {
       Debug.Log("[MCP:Update] Dispatching msg");

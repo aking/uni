@@ -5,6 +5,12 @@
 /[Bb]uilds/
 /Assets/AssetStoreTools*
 /Assets/TextMesh Pro*
+/Assets/MORPH3D*
+/Assets/Plugins/WebSocket.bundle*
+/Assets/Standard Assets/Effects*
+/Assets/Standard Assets/Environment*
+/Assets/Standard Assets/Fonts*
+/Assets/StreamingAssets*
 sysinfo.txt
 *.pidb.meta
 
@@ -44,6 +50,7 @@ Thumbs.db
 *.blend1
 *.VC.db
 *.VC.opendb
+*xcuserdata*
 
 # misc
 v01d
