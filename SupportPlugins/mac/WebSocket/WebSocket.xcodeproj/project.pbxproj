@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		875764431F2EE900001DA0A9 /* zPlatform.m in Sources */ = {isa = PBXBuildFile; fileRef = 875764411F2EE900001DA0A9 /* zPlatform.m */; };
+		87606F4D1F30962F003D3879 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 87606F4C1F30962F003D3879 /* libz.tbd */; };
+		87968D121F310C5400E7C0A0 /* zQueue.c in Sources */ = {isa = PBXBuildFile; fileRef = 87968D111F310C5400E7C0A0 /* zQueue.c */; };
 		87E2220D1F2E56600058F360 /* base64-decode.c in Sources */ = {isa = PBXBuildFile; fileRef = 87E221EE1F2E565F0058F360 /* base64-decode.c */; };
 		87E2220E1F2E56600058F360 /* header.c in Sources */ = {isa = PBXBuildFile; fileRef = 87E221EF1F2E565F0058F360 /* header.c */; };
 		87E2220F1F2E56600058F360 /* WebSocketImpl.m in Sources */ = {isa = PBXBuildFile; fileRef = 87E221F01F2E56600058F360 /* WebSocketImpl.m */; };
@@ -49,8 +51,11 @@
 /* Begin PBXFileReference section */
 		875764411F2EE900001DA0A9 /* zPlatform.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = zPlatform.m; path = ../../../../../Assets/Plugins/iOS/zPlatform.m; sourceTree = "<group>"; };
 		875764421F2EE900001DA0A9 /* zPlatform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zPlatform.h; path = ../../../../../Assets/Plugins/iOS/zPlatform.h; sourceTree = "<group>"; };
+		87606F4C1F30962F003D3879 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = usr/lib/libz.tbd; sourceTree = SDKROOT; };
 		8767ED7E1F2E55A900505D6B /* WebSocket.bundle */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = WebSocket.bundle; sourceTree = BUILT_PRODUCTS_DIR; };
 		8767ED811F2E55A900505D6B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		87968D101F310C5400E7C0A0 /* zQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = zQueue.h; path = ../../../../../Assets/Plugins/iOS/zQueue.h; sourceTree = "<group>"; };
+		87968D111F310C5400E7C0A0 /* zQueue.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = zQueue.c; path = ../../../../../Assets/Plugins/iOS/zQueue.c; sourceTree = "<group>"; };
 		87E221EE1F2E565F0058F360 /* base64-decode.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = "base64-decode.c"; path = "../../../../../Assets/Plugins/iOS/base64-decode.c"; sourceTree = "<group>"; };
 		87E221EF1F2E565F0058F360 /* header.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; name = header.c; path = ../../../../../Assets/Plugins/iOS/header.c; sourceTree = "<group>"; };
 		87E221F01F2E56600058F360 /* WebSocketImpl.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = WebSocketImpl.m; path = ../../../../../Assets/Plugins/iOS/WebSocketImpl.m; sourceTree = "<group>"; };
@@ -90,17 +95,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				87606F4D1F30962F003D3879 /* libz.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		87606F4B1F30962F003D3879 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				87606F4C1F30962F003D3879 /* libz.tbd */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		8767ED751F2E55A900505D6B = {
 			isa = PBXGroup;
 			children = (
 				8767ED801F2E55A900505D6B /* WebSocket */,
 				8767ED7F1F2E55A900505D6B /* Products */,
+				87606F4B1F30962F003D3879 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -124,9 +139,6 @@
 		8767ED871F2E55BC00505D6B /* Source */ = {
 			isa = PBXGroup;
 			children = (
-				875764421F2EE900001DA0A9 /* zPlatform.h */,
-				875764411F2EE900001DA0A9 /* zPlatform.m */,
-				87E222251F2EE7CB0058F360 /* zLog.h */,
 				87E221FB1F2E56600058F360 /* alloc.c */,
 				87E221EE1F2E565F0058F360 /* base64-decode.c */,
 				87E221FD1F2E56600058F360 /* client-handshake.c */,
@@ -155,6 +167,11 @@
 				87E221F31F2E56600058F360 /* server.c */,
 				87E221FE1F2E56600058F360 /* service.c */,
 				87E221F81F2E56600058F360 /* sha-1.c */,
+				87E222251F2EE7CB0058F360 /* zLog.h */,
+				875764421F2EE900001DA0A9 /* zPlatform.h */,
+				875764411F2EE900001DA0A9 /* zPlatform.m */,
+				87968D101F310C5400E7C0A0 /* zQueue.h */,
+				87968D111F310C5400E7C0A0 /* zQueue.c */,
 				87E2220B1F2E56600058F360 /* WebBrowser.h */,
 				87E222051F2E56600058F360 /* WebSocketImpl.h */,
 				87E221F01F2E56600058F360 /* WebSocketImpl.m */,
@@ -229,6 +246,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				87968D121F310C5400E7C0A0 /* zQueue.c in Sources */,
 				87E2220E1F2E56600058F360 /* header.c in Sources */,
 				87E2220F1F2E56600058F360 /* WebSocketImpl.m in Sources */,
 				87E2221E1F2E56600058F360 /* client.c in Sources */,

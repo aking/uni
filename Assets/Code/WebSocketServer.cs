@@ -5,12 +5,13 @@ using UnityEngine.Networking;
   using UnityEditor;
 #endif
 
-public delegate void dispatchDelegate(string _msg);
+/*public delegate void dispatchDelegate(string _msg);
 
 [System.Serializable]
 public class TagObj {
   public string tag;
 }
+*/
 //public class WebSocketServer : MonoBehaviour {
 public class WebSocketServer : ScriptableObject {
   private ushort s_maxReceiveBufferSize = 1024 * 20;
@@ -42,7 +43,7 @@ public class WebSocketServer : ScriptableObject {
     m_mcp = _mcp;
     SetupServer();
     m_cellManager = _cm;
-    m_cellManager.setDispatchFn(dispatch);
+    //m_cellManager.setDispatchFn(dispatch);
 
 /*
     MCP mcp = FindObjectOfType<MCP>();

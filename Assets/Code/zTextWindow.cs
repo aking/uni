@@ -102,6 +102,7 @@ public class zTextWindow : MonoBehaviour, IPointerClickHandler {
         int iValue = Input.inputString[0];
         // is ascii?
         if(iValue < 256 && iValue >= 8) {
+          Debug.Log("KEY:" + Input.inputString);
           BodyMsg bmsg = new BodyMsg();
           bmsg.type = "char";
           bmsg.text = Input.inputString;

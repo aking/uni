@@ -16,7 +16,8 @@ public class MCP : MonoBehaviour {
   public GameObject m_coreNub;
   public Camera m_activeCamera;
 
-  private WebSocketServer m_socketServer;
+  //private WebSocketServer m_socketServer;
+  private WebSocket m_webSocketServer;
   private CellManager m_cellManager;
   private GameObject m_player;
 
@@ -32,7 +33,7 @@ public class MCP : MonoBehaviour {
   void OnEnable() {
     Debug.Log("[MCP:OnEnable] Called....");
 
-    if(m_socketServer == null) {
+    if(m_webSocketServer == null) {
       Debug.Log("[MCP:OnEnable] WebSocket server NULL!");
       return;
     }
@@ -44,7 +45,7 @@ public class MCP : MonoBehaviour {
 
     if(m_dispatchFn == null) {
       Debug.Log("[MCP:OnEnable] Dispatch fn is NULL!");
-      m_dispatchFn = m_socketServer.dispatch;
+      m_dispatchFn = m_webSocketServer.dispatch;
     }
 
     if(m_nubMap == null) {
@@ -63,16 +64,20 @@ public class MCP : MonoBehaviour {
 
   //------------------------------------------------------------------------
   void Start() {
-    // test
-    WebSocket.init();
-
     m_nubMap = new Dictionary<string, GameObject>();
     m_dispatchQueue = new Queue<BodyNubMsg>();
 
     m_cellManager = ScriptableObject.CreateInstance<CellManager>();
-    m_socketServer = ScriptableObject.CreateInstance<WebSocketServer>();
-    m_socketServer.init(this, m_cellManager);
-    m_dispatchFn = m_socketServer.dispatch;
+    //m_socketServer = ScriptableObject.CreateInstance<WebSocketServer>();
+    //m_socketServer.init(this, m_cellManager);
+    //m_dispatchFn = m_socketServer.dispatch;
+
+    if (m_webSocketServer == null)
+    {
+      m_webSocketServer = ScriptableObject.CreateInstance<WebSocket>();
+      m_webSocketServer.init(this, m_cellManager);
+    }
+    m_dispatchFn = m_webSocketServer.dispatch;
 
     m_player = GameObject.FindWithTag("Player");
     Debug.Log("[MCP:Start] Player:" + (m_player ? "FOUND" : "NOT FOUND"));
@@ -98,10 +103,11 @@ public class MCP : MonoBehaviour {
 
   //------------------------------------------------------------------------
   void Update() {
-    if(m_socketServer != null)
-      m_socketServer.update();
+    //if(m_socketServer != null)
+    //  m_socketServer.update();
 
-    WebSocket.tick();
+    if(m_webSocketServer)
+      m_webSocketServer.update();
 
     if(m_dispatchQueue.Count > 0) {
       Debug.Log("[MCP:Update] Dispatching msg");

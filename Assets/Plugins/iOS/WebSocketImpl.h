@@ -9,15 +9,14 @@
 #pragma once
 
 #import <TargetConditionals.h>
-#import "libwebsockets.h"
 
 #if !TARGET_OS_IOS
-@import Cocoa;
-
+  @import Cocoa;
 #else
-#import <UIKit/UIKit.h>
-
+  #import <UIKit/UIKit.h>
 #endif
 
-void _init(void);
+void _init(int _port);
 void _tick(void);
+const char* _getData(void);
+void _dispatch(const char* _str);
