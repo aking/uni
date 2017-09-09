@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using UnityEngine;
@@ -46,7 +47,7 @@ public class WebSocket : ScriptableObject {
     private static void _tick() {Debug.Log("[WebSocket:_tick] IMPLEMENT ME");}
     private static void _dispatch(string _msg) {
       Debug.Log("[WebSocket:_dispatch] IMPLEMENT ME:" + _msg);}
-    private static string _getData() {Debug.Log("[WebSocket:_getData] IMPLEMENT ME");}
+    private static string _getData() {Debug.Log("[WebSocket:_getData] IMPLEMENT ME"); return null;}
 #endif
   //---------------------------------------------------------------------------
 
@@ -79,7 +80,13 @@ public class WebSocket : ScriptableObject {
     bool hadData = (data != null);
     if(hadData) {
       Debug.Log("[WebSocket:tickReceivedPackets] DATA:" + data);
-      TagObj obj = JsonUtility.FromJson<TagObj>(data);
+      TagObj obj = null;
+      try {
+        obj = JsonUtility.FromJson<TagObj>(data);
+      } catch(Exception ex) {
+        Debug.Log("[WebSOcket:tick] INVALID DATA: " + data + "\n" + ex);
+        return false;
+      }
       Debug.Log("OBJ: " + obj.tag);
       string msg = data;
       if (obj.tag == "hex") {
